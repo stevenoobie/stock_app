@@ -1,0 +1,38 @@
+# Define services
+services:
+  database:
+    container_name: database
+    image: postgres:latest # Use the latest PostgreSQL image from Docker Hub
+    environment:
+      POSTGRES_DB: stock # Define the name of the database
+      POSTGRES_USER: postgres # Define the username for accessing the database
+      POSTGRES_PASSWORD: 123456789 # Define the password for the user
+    ports:
+      - "8080:5432" # Forward the container's port 8080 to the host machine's port 8080 for accessing PostgreSQL
+
+  backend:
+    container_name: backend
+    build: ./backend # Build the Docker image using the Dockerfile in the current directory
+    ports:
+      - "3000:3000" # Forward the container's port 3000 to the host machine's port 3000 for accessing the backend service
+    depends_on:
+      - database # Ensure that the backend service starts after the database service is up and running
+    env_file:
+      - ./backend/.env # Load environment variables from the .env file in the current directory
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    command: sh -c "npx prisma generate && npx prisma migrate deploy && npm run start:dev"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=development
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
