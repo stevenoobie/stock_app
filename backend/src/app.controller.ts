@@ -14,4 +14,9 @@ export class AppController {
   getOssama(): string {
     return this.appService.getHello();
   }
+
+  @Get('/path')
+  getPath(): string {
+    return this.appService.getHello();
+  }
 }
