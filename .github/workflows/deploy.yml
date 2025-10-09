@@ -3,7 +3,7 @@ name: Build and Deploy to Azure Web Apps
 on:
   push:
     branches:
-      - main
+      - production
 
 env:
   REGISTRY_NAME: ${{ secrets.AZURE_REGISTRY_NAME }}
