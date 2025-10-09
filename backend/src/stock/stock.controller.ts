@@ -20,7 +20,7 @@ export class StockController {
 
   @HttpCode(HttpStatus.OK)
   @Get('all')
-  async getAllProductsPaginated(@Query() query: PaginationDto) {
+  async getAllStockPaginated(@Query() query: PaginationDto) {
     return await this.stockService.getAllStockPaginated(query);
   }
 
