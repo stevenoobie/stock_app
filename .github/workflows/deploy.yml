@@ -4,6 +4,9 @@ on:
   push:
     branches: ["production"]
   workflow_dispatch:
+permissions:
+  id-token: write
+  contents: read
 
 env:
   REGISTRY: ghcr.io
