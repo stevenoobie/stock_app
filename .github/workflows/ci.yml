@@ -1,0 +1,49 @@
+name: CI — tests & builds
+
+on:
+  push:
+    branches: [ "main", "staging", "dev", "feature/*" ]
+  pull_request:
+    branches: [ "main", "staging" ]
+
+jobs:
+  backend-tests:
+    name: Backend — tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install backend deps
+        run: npm ci
+
+      - name: Run backend tests
+        run: npm run test
+        # If tests output coverage or need artifacts you can save them here.
+
+  frontend-build:
+    name: Frontend — build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install frontend deps
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
