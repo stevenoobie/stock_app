@@ -5,8 +5,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Create two users
-  const password = await bcrypt.hash('1', 10);
-  const adminPass = await bcrypt.hash('koteesa123!', 10);
+  const password = await bcrypt.hash(process.env.USER_PASS!, 10);
+  const adminPass = await bcrypt.hash(process.env.ADMIN_PASS!, 10);
   await prisma.user.createMany({
     data: [
       {
@@ -23,20 +23,6 @@ async function main() {
       },
     ],
   });
-  const products = Array.from({ length: 10 }).map((_, i) => ({
-    name: `Product ${i + 1}`,
-    code: `P${1000 + i}`,
-    weight_gold: 10 + i, // example weights
-    weight_silver: 5 + i,
-    weight_copper: 2 + i,
-    price_gold: 1000 + i * 50,
-    price_silver: 500 + i * 25,
-    price_copper: 200 + i * 10,
-  }));
-
-  await prisma.product.createMany({ data: products });
-
-  console.log(`✅ Seeded ${products.length} products`);
 }
 
 main()
