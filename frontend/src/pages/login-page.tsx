@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 import { LoginForm } from "@/components/login-form";
 import { useAuth } from "../context/AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
