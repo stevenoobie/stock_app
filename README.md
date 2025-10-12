@@ -1,4 +1,4 @@
-# Stock App — Inventory & Sales Management System
+# Stock App: Inventory & Sales Management System
 
 A full-stack inventory management platform built with NestJS, React, and PostgreSQL, designed to help manage products, sales, and expenses efficiently.
 The project demonstrates solid backend–frontend integration, containerization with Docker, and automated CI/CD pipelines using GitHub Actions and Azure Web Apps.
