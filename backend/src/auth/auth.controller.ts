@@ -26,6 +26,7 @@ export class AuthController {
     return await this.authService.signIn(body.username, body.password);
   }
   @Get('path')
+  @Public()
   ossama() {
     return 'Hello hossama ';
   }
