@@ -12,7 +12,7 @@ async function main() {
       {
         username: 'admin',
         email: 'admin@example.com',
-        password: adminPass, // hash in real use
+        password: adminPass,
         role: Role.ADMIN,
       },
       {
@@ -27,7 +27,7 @@ async function main() {
 
 main()
   .then(async () => {
-    console.log('✅ Users created successfully');
+    console.log('Users created successfully');
     await prisma.$disconnect();
   })
   .catch(async (e) => {

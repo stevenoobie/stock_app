@@ -7,9 +7,9 @@ async function bootstrap() {
     origin: [
       'http://localhost:8000',
       'https://frontend-dqdnbdehc5d3ajhp.uaenorth-01.azurewebsites.net', // for production
-    ], // React dev server
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'], // very important
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
   await app.listen(process.env.PORT || 3000);

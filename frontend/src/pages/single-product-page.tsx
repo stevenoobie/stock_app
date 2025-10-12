@@ -16,7 +16,7 @@ import axios from "axios";
 
 import { useEffect } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom"; // 👈 for route params
+import { useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 
 function SingleProductPage() {

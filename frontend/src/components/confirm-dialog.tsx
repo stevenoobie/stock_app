@@ -16,8 +16,8 @@ interface ConfirmDialogProps {
   description: string;
   confirmLabel?: string;
   cancelLabel?: string;
-  onConfirm: () => void; // action when OK clicked
-  trigger: React.ReactNode; // what triggers the dialog (e.g. a button)
+  onConfirm: () => void;
+  trigger: React.ReactNode;
 }
 
 export function ConfirmDialog({

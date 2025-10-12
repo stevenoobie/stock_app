@@ -29,7 +29,7 @@ import { z } from "zod";
 function SingleStockPage() {
   const { showAlert } = useAlert();
   const navigate = useNavigate();
-  const { id } = useParams(); // if present => edit mode
+  const { id } = useParams();
   const [products, setProducts] = useState<
     {
       id: number;
@@ -54,7 +54,6 @@ function SingleStockPage() {
     };
   } | null>(null);
 
-  // loading prevents the form from rendering empty in edit mode
   const [loading, setLoading] = useState<boolean>(!!id);
 
   const stockSchema = z.object({
@@ -68,7 +67,6 @@ function SingleStockPage() {
   const form = useForm<StockFormValues>({
     resolver: zodResolver(stockSchema),
     defaultValues: {
-      // productId will be set by form.reset in edit mode, and by selecting product in create mode
       productId: undefined as unknown as number,
       quantity_gold: 0,
       quantity_silver: 0,
@@ -76,17 +74,14 @@ function SingleStockPage() {
     },
   });
 
-  // helper: fetch product by id for full details (including stock if backend returns it)
   async function fetchProductById(productId: number) {
     try {
       const token = localStorage.getItem("access_token");
       const res = await axios.get(`${API_URLS.PRODUCTS}/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      // normalize product object shape (depends on your backend)
       const p = res.data;
-      // If your backend returns product with nested stock use that. If not, backend might return product fields only.
-      // We'll try to create a unified product shape:
+
       const productWithStock = {
         id: p.id,
         name: p.name,
@@ -103,15 +98,13 @@ function SingleStockPage() {
       };
       return productWithStock;
     } catch (err) {
-      // fallback: return minimal item if the detailed endpoint isn't available
       return undefined;
     }
   }
 
-  // --- Load existing stock when editing ---
   useEffect(() => {
     if (!id) {
-      setLoading(false); // create mode -> no waiting
+      setLoading(false);
       return;
     }
 
@@ -125,7 +118,6 @@ function SingleStockPage() {
 
         const stock = res.data;
 
-        // Build a product object that includes stock quantities (so select can show stock)
         const productWithStock = {
           ...stock.product,
           stock: {
@@ -135,7 +127,6 @@ function SingleStockPage() {
           },
         };
 
-        // make sure the product appears in the products list so SelectValue can match it
         setProducts((prev) => {
           if (prev.some((p) => p.id === productWithStock.id)) return prev;
           return [productWithStock, ...prev];
@@ -143,7 +134,6 @@ function SingleStockPage() {
 
         setSelectedProduct(productWithStock);
 
-        // set productId and quantities in the form
         form.reset({
           productId: stock.productId,
           quantity_gold: stock.quantity_gold ?? 0,
@@ -175,8 +165,6 @@ function SingleStockPage() {
           params: { search: productSearch },
         });
 
-        // res.data expected to be array of { id, name, code } (no stock)
-        // keep items as-is; stock will be fetched on selection if needed
         setProducts(res.data ?? []);
       } catch (err) {
         showAlert("error", "Failed", "Failed to fetch products");
@@ -188,29 +176,24 @@ function SingleStockPage() {
     };
   }, [productSearch, id, showAlert]);
 
-  // --- Handle select change (create mode) ---
   async function handleProductSelect(
     value: string,
     fieldOnChange: (v: number) => void
   ) {
     const numericId = Number(value);
-    fieldOnChange(numericId); // set productId in react-hook-form
+    fieldOnChange(numericId);
 
-    // try to find product in current products list
     let prod = products.find((p) => p.id === numericId);
 
-    // if product exists but has no stock info, attempt to fetch details
     if (!prod || !prod.stock) {
       const fetched = await fetchProductById(numericId);
       if (fetched) {
         prod = fetched;
-        // add to products list (so label exists)
         setProducts((prev) => {
           if (prev.some((p) => p.id === fetched.id)) return prev;
           return [fetched, ...prev];
         });
       } else if (!prod) {
-        // fallback to minimal product object if we couldn't fetch details
         prod = {
           id: numericId,
           name: `#${numericId}`,
@@ -222,22 +205,18 @@ function SingleStockPage() {
 
     setSelectedProduct(prod ?? null);
 
-    // populate quantity inputs if stock available
     if (prod?.stock) {
       form.setValue("quantity_gold", prod.stock.quantity_gold ?? 0);
       form.setValue("quantity_silver", prod.stock.quantity_silver ?? 0);
       form.setValue("quantity_copper", prod.stock.quantity_copper ?? 0);
     } else {
-      // reset to 0 when no stock info
       form.setValue("quantity_gold", 0);
       form.setValue("quantity_silver", 0);
       form.setValue("quantity_copper", 0);
     }
   }
 
-  // --- Submit ---
   const onSubmit: SubmitHandler<StockFormValues> = async (data) => {
-    // ensure we have a productId either from selectedProduct or from the form value
     const productIdFromForm = Number(form.getValues("productId"));
     const productIdToSend =
       selectedProduct?.id ??
@@ -286,7 +265,6 @@ function SingleStockPage() {
     }
   };
 
-  // render loading for edit mode until stock/product is loaded
   if (loading) {
     return <div className="p-6">Loading stock...</div>;
   }
@@ -304,7 +282,7 @@ function SingleStockPage() {
                 <FormControl>
                   <div>
                     <Select
-                      disabled={!!id} // disable changing product in edit mode
+                      disabled={!!id}
                       value={field.value ? field.value.toString() : ""}
                       onValueChange={(val) =>
                         handleProductSelect(val, (n) => field.onChange(n))
@@ -346,7 +324,6 @@ function SingleStockPage() {
                       </SelectContent>
                     </Select>
 
-                    {/* show the stock summary (from selectedProduct or from form values if no stock) */}
                     <div className="mt-2 text-sm text-gray-600">
                       {selectedProduct?.stock ? (
                         <>

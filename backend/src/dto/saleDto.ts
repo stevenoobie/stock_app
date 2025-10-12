@@ -4,9 +4,9 @@ export class SaleDto {
   customerPhone?: string;
   createdById: number | null;
 
-  globalDiscount?: number; // %
-  totalBeforeDiscount: number; // sum of all row subtotals before global discount
-  totalAfterDiscount: number; // final amount after global discount
+  globalDiscount?: number;
+  totalBeforeDiscount: number;
+  totalAfterDiscount: number;
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -19,7 +19,7 @@ export class SaleItemDto {
   productName?: string;
   material: 'gold' | 'silver' | 'copper';
 
-  qty: number; // row.quantity
-  price: number; // row.price
-  discount?: number; // %
+  qty: number;
+  price: number;
+  discount?: number;
 }

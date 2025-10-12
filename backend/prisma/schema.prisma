@@ -62,9 +62,9 @@ model Sale {
 model SaleItem {
   id                 Int    @id @default(autoincrement())
   quantity           Int
-  unitPrice          Float // row.price from frontend
-  discountPercentage Float  @default(0) // row.discount
-  material           String // "gold" | "silver" | "copper"
+  unitPrice          Float 
+  discountPercentage Float  @default(0) 
+  material           String 
 
   productId Int
   product   Product @relation(fields: [productId], references: [id])

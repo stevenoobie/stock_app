@@ -19,20 +19,18 @@ import { ExpenseService } from './expenses.service';
 export class ExpensesController {
   constructor(private readonly expenseService: ExpenseService) {}
 
-  // Create expense
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createExpense(@Body() dto: ExpenseDto) {
     return this.expenseService.createExpense(dto);
   }
 
-  // Get all expenses (paginated + optional search)
   @HttpCode(HttpStatus.OK)
   @Get('all')
   async getAllExpensesPaginated(@Query() query: PaginationDto) {
     return this.expenseService.getAllExpensesPaginated(query);
   }
-  // Stats endpoint
+
   @HttpCode(HttpStatus.OK)
   @Get('stats')
   async getStats(
@@ -50,14 +48,12 @@ export class ExpensesController {
     return this.expenseService.getStats(start, end);
   }
 
-  // Get expense by ID
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   async getExpenseById(@Param('id', ParseIntPipe) id: number) {
     return this.expenseService.getExpenseById(id);
   }
 
-  // Update expense
   @HttpCode(HttpStatus.OK)
   @Put(':id')
   async updateExpense(
@@ -67,7 +63,6 @@ export class ExpensesController {
     return this.expenseService.updateExpense(id, dto);
   }
 
-  // Delete expense
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
   async deleteExpense(@Param('id', ParseIntPipe) id: number) {

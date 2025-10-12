@@ -25,22 +25,4 @@ export class AuthController {
   async login(@Body() body: LoginDto) {
     return await this.authService.signIn(body.username, body.password);
   }
-  @Get('path')
-  @Public()
-  ossama() {
-    return 'Hello hossama ';
-  }
-  @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
-  @Get('admin')
-  admin() {
-    return 'hello admin';
-  }
-
-  @UseGuards(RolesGuard)
-  @Roles(Role.User)
-  @Get('user')
-  user() {
-    return 'hello user';
-  }
 }

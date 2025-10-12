@@ -16,7 +16,7 @@ interface LoginFormProps extends React.ComponentProps<"div"> {
 
 export function LoginForm({ className, onLogin, ...props }: LoginFormProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // prevent page refresh
+    e.preventDefault();
     const form = e.currentTarget;
     const username = (form.elements.namedItem("username") as HTMLInputElement)
       .value;

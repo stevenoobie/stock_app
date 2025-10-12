@@ -45,7 +45,6 @@ export default function SaleRow(props: SaleRowProps) {
     onChange?.(index, "productName", product?.name || "");
 
     if (product) {
-      // update price depending on current material
       switch (row.material) {
         case "gold":
           onChange?.(index, "price", product.gold.price);

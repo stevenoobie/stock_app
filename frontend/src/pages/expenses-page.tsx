@@ -53,7 +53,7 @@ export default function ExpensesPage() {
       <h1 className="text-2xl font-bold mb-4">Expenses</h1>
       <DataTable
         columns={columns}
-        data={data?.data ?? []} // backend should return { data: SaleDto[], total: number }
+        data={data?.data ?? []}
         total={data?.total ?? 0}
         pageIndex={pageIndex}
         onPageChange={setPageIndex}

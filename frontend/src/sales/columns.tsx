@@ -134,65 +134,7 @@ export function useSaleColumns(): ColumnDef<Sale>[] {
           ? new Date(row.original.updatedAt).toLocaleDateString()
           : "-",
     },
-    // {
-    //   id: "actions",
-    //   enableHiding: false,
-    //   cell: ({ row }) => {
-    //     const sale = row.original;
-    //     return (
-    //       <DropdownMenu>
-    //         <DropdownMenuTrigger asChild>
-    //           <Button variant="ghost" className="h-8 w-8 p-0">
-    //             <MoreHorizontal className="h-4 w-4" />
-    //           </Button>
-    //         </DropdownMenuTrigger>
-    //         <DropdownMenuContent align="end">
-    //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-    //           <DropdownMenuItem
-    //             onClick={() => navigate(`/admin/sales/${sale.id}`)}
-    //           >
-    //             View / Edit
-    //           </DropdownMenuItem>
 
-    //           <ConfirmDialog
-    //             title="Delete sale?"
-    //             description="Are you sure you want to delete this sale? This action cannot be undone."
-    //             confirmLabel="Delete"
-    //             cancelLabel="Cancel"
-    //             onConfirm={async () => {
-    //               const token = localStorage.getItem("access_token");
-    //               const res = await axios.delete(
-    //                 `${API_URLS.SALES}/${sale.id}`,
-    //                 {
-    //                   headers: { Authorization: `Bearer ${token}` },
-    //                 }
-    //               );
-    //               if (res.status === 200) {
-    //                 window.location.reload();
-    //                 showAlert(
-    //                   "success",
-    //                   "Sale Deleted",
-    //                   "Sale was deleted successfully!"
-    //                 );
-    //               } else {
-    //                 showAlert("error", "Failed", "Failed to delete sale");
-    //               }
-    //             }}
-    //             trigger={
-    //               <DropdownMenuItem
-    //                 className="text-red-600"
-    //                 onSelect={(e) => e.preventDefault()}
-    //                 asChild
-    //               >
-    //                 <div>Delete</div>
-    //               </DropdownMenuItem>
-    //             }
-    //           />
-    //         </DropdownMenuContent>
-    //       </DropdownMenu>
-    //     );
-    //   },
-    // },
     {
       id: "actions",
       enableHiding: false,

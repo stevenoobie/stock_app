@@ -19,15 +19,12 @@ export class SalesService {
   private OWN_EDIT_WINDOW_MS = 24 * this.HOUR;
 
   async createSale(createSaleDto: SaleDto, user: User) {
-    // 1. Fetch all product stocks involved in the sale
     const productIds = createSaleDto.sales.map((item) => item.productId);
     const stocks = await this.prisma.stock.findMany({
       where: { productId: { in: productIds } },
     });
-    // 2. Create a map for quick lookup
     const stockMap = new Map(stocks.map((s) => [s.productId, s]));
 
-    // 3. Validate stock availability
     for (const item of createSaleDto.sales) {
       const stock = stockMap.get(item.productId);
       if (!stock) {
@@ -49,7 +46,6 @@ export class SalesService {
       }
     }
 
-    // 4. Proceed with transaction: create sale + decrement stock
     const res = await this.prisma.$transaction(async (tx) => {
       const sale = await tx.sale.create({
         data: {
@@ -64,14 +60,13 @@ export class SalesService {
               productId: item.productId,
               material: item.material,
               quantity: item.qty,
-              unitPrice: item.price, // <-- make sure matches schema field name
+              unitPrice: item.price,
               discountPercentage: item.discount ?? 0,
             })),
           },
         },
       });
 
-      // decrement stock
       for (const item of createSaleDto.sales) {
         if (item.material === 'gold') {
           await tx.stock.update({
@@ -99,7 +94,7 @@ export class SalesService {
 
   async getAllSalesPaginated(paginationDto: PaginationDto) {
     const skip = +(paginationDto.skip ?? 0);
-    const take = +(paginationDto.take ?? 10); // default limit
+    const take = +(paginationDto.take ?? 10);
     const search = paginationDto.search?.trim();
 
     const where = search
@@ -140,7 +135,7 @@ export class SalesService {
       include: {
         saleItems: {
           include: {
-            product: true, // so you can access product name
+            product: true,
           },
         },
       },
@@ -160,7 +155,6 @@ export class SalesService {
     await this.ensureCanModify(id, user);
 
     return this.prisma.$transaction(async (tx) => {
-      // 1. Find the old sale with items
       const oldSale = await tx.sale.findUnique({
         where: { id },
         include: { saleItems: true },
@@ -173,7 +167,6 @@ export class SalesService {
         );
       }
 
-      // 2. Restore stock for old sale items
       for (const item of oldSale.saleItems) {
         if (item.material === 'gold') {
           await tx.stock.update({
@@ -193,7 +186,6 @@ export class SalesService {
         }
       }
 
-      // 3. Validate stock availability for new items
       const productIds = updateSaleDto.sales.map((item) => item.productId);
       const stocks = await tx.stock.findMany({
         where: { productId: { in: productIds } },
@@ -222,10 +214,8 @@ export class SalesService {
         }
       }
 
-      // 4. Delete old saleItems (clean slate)
       await tx.saleItem.deleteMany({ where: { saleId: id } });
 
-      // 5. Update sale
       const updatedSale = await tx.sale.update({
         where: { id },
         data: {
@@ -249,7 +239,6 @@ export class SalesService {
         },
       });
 
-      // 6. Decrement stock for new items
       for (const item of updateSaleDto.sales) {
         if (item.material === 'gold') {
           await tx.stock.update({
@@ -276,7 +265,6 @@ export class SalesService {
   async deleteSale(id: number, user: User) {
     await this.ensureCanModify(id, user);
     return this.prisma.$transaction(async (tx) => {
-      // 1. Find the sale with its items
       const sale = await tx.sale.findUnique({
         where: { id },
         include: { saleItems: true },
@@ -289,7 +277,6 @@ export class SalesService {
         );
       }
 
-      // 2. Restore stock for all items
       for (const item of sale.saleItems) {
         if (item.material === 'gold') {
           await tx.stock.update({
@@ -309,7 +296,6 @@ export class SalesService {
         }
       }
 
-      // 3. Delete sale (and saleItems if not cascading automatically)
       await tx.saleItem.deleteMany({ where: { saleId: id } });
       await tx.sale.delete({ where: { id } });
 

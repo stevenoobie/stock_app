@@ -14,7 +14,7 @@ export class SaleMapper {
       createdById: sale.createdById,
       sales: sale.saleItems.map((item) => ({
         productId: item.productId,
-        productName: item.product?.name ?? undefined, // ✅ pull product name here
+        productName: item.product?.name ?? undefined,
         material: item.material as 'gold' | 'silver' | 'copper',
         qty: item.quantity,
         price: item.unitPrice,

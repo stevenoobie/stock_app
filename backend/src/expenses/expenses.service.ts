@@ -101,7 +101,6 @@ export class ExpenseService {
   }
 
   async getStats(startDate: Date, endDate: Date) {
-    // --- Daily sales and expenses ---
     const salesByDay = await this.prisma.sale.groupBy({
       by: ['createdAt'],
       _sum: { totalAfterDiscount: true },
@@ -118,7 +117,6 @@ export class ExpenseService {
       },
     });
 
-    // --- Build daily map ---
     const dailyMap: Record<
       string,
       { sales: number; expenses: number; profit: number }
@@ -136,7 +134,6 @@ export class ExpenseService {
       dailyMap[day].expenses += e._sum.amount || 0;
     }
 
-    // compute profit per day
     for (const day in dailyMap) {
       const { sales, expenses } = dailyMap[day];
       dailyMap[day].profit = sales - expenses;
@@ -149,11 +146,9 @@ export class ExpenseService {
       profit: vals.profit,
     }));
 
-    // --- Totals from dailyData ---
     const totalSales = dailyData.reduce((sum, d) => sum + d.sales, 0);
     const totalExpenses = dailyData.reduce((sum, d) => sum + d.expenses, 0);
 
-    // --- Weights (requires saleItems) ---
     const saleItems = await this.prisma.saleItem.findMany({
       where: {
         sale: {

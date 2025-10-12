@@ -1,4 +1,3 @@
-// src/context/AlertContext.tsx
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { AlertMessage } from "@/components/alert-message";
 
@@ -34,7 +33,6 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
     <AlertContext.Provider value={{ showAlert }}>
       {children}
 
-      {/* Render all active alerts fixed on top */}
       <div className="fixed top-4 right-4 flex flex-col gap-2 z-99999 w-80 ">
         {alerts.map((alert) => (
           <AlertMessage

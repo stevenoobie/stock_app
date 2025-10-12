@@ -58,13 +58,11 @@ function App() {
                   }
                 />
 
-                {/* Sales list (all users) */}
                 <Route path="sales" element={<SalesPage />} />
 
                 <Route path="sales/new" element={<SaleForm />} />
                 <Route path="sales/:saleId" element={<SaleForm />} />
 
-                {/* Stats (admin only) */}
                 <Route
                   path="stats/*"
                   element={
@@ -74,7 +72,6 @@ function App() {
                   }
                 />
 
-                {/* Stock (admin only) */}
                 <Route
                   path="stock"
                   element={
@@ -100,7 +97,6 @@ function App() {
                   }
                 />
 
-                {/* Expenses (admin only) */}
                 <Route
                   path="expenses"
                   element={

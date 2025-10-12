@@ -1,4 +1,3 @@
-// src/components/AlertMessage.tsx
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CheckCircle, Info, XCircle } from "lucide-react";
 

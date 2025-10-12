@@ -8,7 +8,6 @@ export class ProductDto {
   createdAt?: Date;
   updatedAt?: Date;
 }
-// src/dto/product-response.dto.ts
 export class ProductSpecs {
   weight: number;
   price: number;
